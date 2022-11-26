@@ -21,6 +21,7 @@ TO-SQL
 │  .gitignore               // git提交时的忽略配置文件
 │  app.js                   // 主文件（入口文件）
 │  database-config.js       // 自定义配置文件（在这里修改数据库的配置）
+│  LICENSE                  // 开源协议
 │  package-lock.json
 │  package.json
 │  README.md                // 自述文件
