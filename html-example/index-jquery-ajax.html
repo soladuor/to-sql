@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- jQuery -->
+    <script src="https://cdn.staticfile.org/jquery/3.6.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="main">
+    <h5>注：一个请求只能查一句</h5>
+    <h5>例子：select * from user</h5>
+    <label>
+        <textarea cols="60" id="sql" placeholder="请输入SQL语句" rows="1"></textarea>
+    </label>
+    <br>
+    <button id="btn" onclick="btn">点击按钮</button>
+    <br>
+    <div id="result"></div>
+</div>
+<script>
+    $(function () {
+
+        // 提供一个默认测试的 SQL 语句
+        $("#sql").val("select * from user");
+        // 定义一个查询函数，参数为SQL语句，(一个请求只能查一句)
+        // 参数：查询的SQL语句，回调函数
+        const toSQL = (sql, callback) => {
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:3006/api/sql",
+                data: {sql: sql},
+                success: callback,
+            });
+        }
+
+        // 绑定点击事件
+        $("#btn").on('click', () => {
+
+            const sql = $("#sql").val();    // 得到输入框内的SQL语句
+            toSQL(sql, (res) => {
+                // 控制台打印一下
+                console.log(res)
+                // 根据控制台的输出结果来处理并渲染数据
+                // 代码为 400 时说明请求失败
+                if (res.code === 400) {
+                    console.log(res)
+                    alert('请求失败，' + res.msg)
+                    return
+                }
+                // 成功时
+                // 将状态码和返回的消息写到页面中
+                $('#result').html(`code：${res.code}， msg：${res.msg}`)
+                // 将响应的数据写到页面
+                res.data.forEach((data) => {
+                    document.getElementById('result').innerHTML +=
+                        `<li>id：${data.id}，姓名：${data.name}</li>`
+                })
+
+            })
+        });
+
+    });
+</script>
+</body>
+</html>

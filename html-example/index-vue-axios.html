@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+    <!-- axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="main">
+    <h5>注：一个请求只能查一句</h5>
+    <h5>例子：select * from user</h5>
+    <label>
+        <textarea cols="60" placeholder="请输入SQL语句" rows="1" v-model="sql"></textarea>
+    </label>
+    <br>
+    <button @click="btn" id="btn">点击按钮</button>
+    <br>
+    <div id="result">code：{{ list.code }}，msg：{{ list.msg }}</div>
+    <ul>
+        <li :key="sql" v-for="sql in list.data">id{{ sql.id }}，姓名：{{ sql.name }}</li>
+    </ul>
+</div>
+<script>
+    const app = {
+        data() {
+            return {
+                sql: 'select * from user',  // 提供一个默认测试的 SQL 语句
+                list: ''
+            }
+        },
+        methods: {
+
+            // 定义一个查询函数，参数为SQL语句，(一个请求只能查一句)
+            // 参数：查询的SQL语句，回调函数(参数为返回的数据)
+            toSQL(sql, callback) {
+                axios.post('http://127.0.0.1:3006/api/sql', {sql: sql})
+                    .then(callback)
+            },
+
+            // 点击按钮的事件
+            btn() {
+                this.toSQL(this.sql, (res) => {
+                    // 控制台打印一下
+                    console.log(res)
+                    // 根据控制台的输出结果来处理并渲染数据
+                    // 代码为 400 时说明请求失败
+                    if (res.data.code === 400) {
+                        console.log(res)
+                        alert('请求失败，' + res.data.msg)
+                        return
+                    }
+                    // 成功时，渲染数据
+                    this.list = res.data;
+                })
+            }
+
+        }
+    }
+    // 挂载实例
+    Vue.createApp(app).mount('#main');
+</script>
+</body>
+</html>
