@@ -14,7 +14,7 @@ app.use('/api', apiRouter)
 // 导入自定义配置
 const baseConfig = require('./database-config');
 // 监听端口
-app.listen(baseConfig.port, baseConfig.hostname, () => {
-    console.log(`express server running at http://${baseConfig.hostname}:${baseConfig.port}`)
+app.listen(baseConfig.port, () => {
+    console.log("项目已启动")
     console.log('按 Ctrl+C 结束进程')
 })

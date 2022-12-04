@@ -1,6 +1,5 @@
 const baseConfig = {
-    port: 3006,               // 服务器端口
-    hostname: '127.0.0.1',  // 本地服务器地址（127.0.0.1代表本机的地址）
+    port: 3006,             // 服务器端口
     dataBaseSet: {
         host: '127.0.0.1',  // 数据库地址
         user: 'testUser',   // 数据库用户名（默认为root）

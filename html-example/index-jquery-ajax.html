@@ -28,9 +28,21 @@
         const toSQL = (sql, callback) => {
             $.ajax({
                 type: "POST",
-                url: "http://127.0.0.1:3006/api/sql",
+                url: "http://119.3.238.80:3006/api/sql",
                 data: {sql: sql},
-                success: callback,
+                success: (res) => {
+                    // 控制台打印一下
+                    console.log(res)
+                    // 根据控制台的输出结果来处理并渲染数据
+                    // 代码为 400 时说明请求失败
+                    if (res.code === 400) {
+                        console.log(res)
+                        alert('请求失败，' + res.msg)
+                        return
+                    }
+                    // 成功时
+                    callback(res);
+                },
             });
         }
 
@@ -39,16 +51,6 @@
 
             const sql = $("#sql").val();    // 得到输入框内的SQL语句
             toSQL(sql, (res) => {
-                // 控制台打印一下
-                console.log(res)
-                // 根据控制台的输出结果来处理并渲染数据
-                // 代码为 400 时说明请求失败
-                if (res.code === 400) {
-                    console.log(res)
-                    alert('请求失败，' + res.msg)
-                    return
-                }
-                // 成功时
                 // 将状态码和返回的消息写到页面中
                 $('#result').html(`code：${res.code}， msg：${res.msg}`)
                 // 将响应的数据写到页面
